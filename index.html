@@ -3,9 +3,773 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Establishing a Speech Purpose - Uchenna</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --accent: #f59e0b;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+        
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: none;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 60px 80px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .slide.prev {
+            transform: translateX(-50px);
+            opacity: 0;
+        }
+        
+        /* Typography */
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            text-align: center;
+        }
+        
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--text-light);
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+        
+        .speaker-name {
+            font-size: 1.25rem;
+            color: var(--primary-light);
+            font-weight: 600;
+            margin-top: 2rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        /* Content Cards */
+        .content-card {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            max-width: 900px;
+            width: 100%;
+            transform: translateY(20px);
+            animation: slideUp 0.6s ease forwards;
+        }
+        
+        @keyframes slideUp {
+            to { transform: translateY(0); }
+        }
+        
+        .question-list {
+            list-style: none;
+            margin: 2rem 0;
+        }
+        
+        .question-list li {
+            font-size: 1.5rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-left: 5px solid var(--primary);
+            border-radius: 0 12px 12px 0;
+            transition: transform 0.3s ease;
+            position: relative;
+            padding-left: 3rem;
+        }
+        
+        .question-list li::before {
+            content: '?';
+            position: absolute;
+            left: 1rem;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .question-list li:hover {
+            transform: translateX(10px);
+        }
+        
+        /* Three Column Layout */
+        .three-col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 2rem;
+        }
+        
+        .purpose-card {
+            background: var(--white);
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: all 0.3s ease;
+            border-top: 4px solid transparent;
+        }
+        
+        .purpose-card:hover {
+            transform: translateY(-10px);
+            border-top-color: var(--accent);
+        }
+        
+        .purpose-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .purpose-card h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .purpose-card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        /* Formula Section */
+        .formula-box {
+            background: var(--primary);
+            color: white;
+            padding: 2rem 3rem;
+            border-radius: 16px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2rem 0;
+            text-align: center;
+            box-shadow: 0 10px 30px -10px rgba(30, 58, 138, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .formula-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .example-item {
+            background: #f0f9ff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+            font-style: italic;
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+        
+        .example-item:hover {
+            background: #e0f2fe;
+            transform: scale(1.02);
+        }
+        
+        /* Warning Section */
+        .warning-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 800px;
+            width: 100%;
+            margin-top: 2rem;
+        }
+        
+        .warning-item {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-left: 4px solid #ef4444;
+            transition: transform 0.3s ease;
+        }
+        
+        .warning-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .warning-icon {
+            font-size: 2rem;
+            color: #ef4444;
+        }
+        
+        .warning-item span:last-child {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        /* Final Questions */
+        .final-questions {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .final-q {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .final-q:hover {
+            border-color: var(--accent);
+            transform: scale(1.02);
+        }
+        
+        .finger {
+            font-size: 1.5rem;
+        }
+        
+        /* Navigation */
+        .nav-controls {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+            background: rgba(255,255,255,0.9);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-btn:hover {
+            background: var(--primary-light);
+            transform: scale(1.1);
+        }
+        
+        .nav-btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .slide-counter {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 60px;
+            justify-content: center;
+        }
+        
+        /* Timer */
+        .timer {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            font-family: 'Inter', monospace;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .timer.warning {
+            color: #ef4444;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        /* Speaker Notes Toggle */
+        .notes-toggle {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background: white;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .notes-toggle:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .speaker-notes {
+            position: fixed;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(30, 58, 138, 0.95);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            max-width: 800px;
+            width: 90%;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 999;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .speaker-notes.visible {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .speaker-notes::before {
+            content: '🎤 Speaker Notes';
+            display: block;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.875rem;
+        }
+        
+        .speaker-notes p {
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+            z-index: 1001;
+        }
+        
+        /* Decorative Elements */
+        .deco-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .slide-content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .slide { padding: 40px; }
+            h1 { font-size: 3rem; }
+            h2 { font-size: 2.5rem; }
+            .three-col { grid-template-columns: 1fr; }
+            .examples-grid { grid-template-columns: 1fr; }
+            .warning-grid { grid-template-columns: 1fr; }
+        }
+        
+        /* Opening Animation */
+        .title-slide h1 {
+            animation: fadeInUp 0.8s ease forwards;
+            opacity: 0;
+        }
+        
+        .title-slide .subtitle {
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+            opacity: 0;
+        }
+        
+        .title-slide .speaker-name {
+            animation: fadeInUp 0.8s ease 0.4s forwards;
+            opacity: 0;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, rgba(245, 158, 11, 0.3) 0%, rgba(245, 158, 11, 0.3) 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 40%;
+            background-position: 0 88%;
+            padding: 0 4px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello World!</h1>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <div class="timer" id="timer">
+        <span>⏱️</span>
+        <span id="timeDisplay">05:00</span>
+    </div>
+    
+    <button class="notes-toggle" onclick="toggleNotes()">📝 Show Notes</button>
+    
+    <div class="speaker-notes" id="speakerNotes">
+        <p id="notesText">Welcome to your speech...</p>
+    </div>
+
+    <div class="presentation-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide" data-notes="Good evening everyone. Before we write a speech… before we choose a topic… before we create slides… there is one question that determines whether our speech succeeds or fails: Why am I giving this speech? Tonight, we'll talk about how to clearly establish your speech purpose — because purpose gives your speech direction.">
+            <div class="deco-circle" style="width: 600px; height: 600px; top: -200px; right: -200px;"></div>
+            <div class="deco-circle" style="width: 400px; height: 400px; bottom: -100px; left: -100px;"></div>
+            <div class="slide-content">
+                <div class="subtitle">Speechcraft Session 3</div>
+                <h1>Establishing a<br>Speech Purpose</h1>
+                <div class="speaker-name">Uchenna</div>
+            </div>
+        </div>
+
+        <!-- Slide 2: What Is Purpose -->
+        <div class="slide" data-notes="A speech purpose is not your topic. It's not your title. Your purpose is the outcome you want in your audience. Every strong speech aims to influence one of three things: Thoughts, Feelings, or Actions. If you can clearly state your purpose in one sentence, you are already ahead.">
+            <div class="slide-content">
+                <h2>What Is a Speech Purpose?</h2>
+                <div class="content-card">
+                    <p style="font-size: 1.25rem; margin-bottom: 2rem; color: var(--text-light);">Your speech purpose answers:</p>
+                    <ul class="question-list">
+                        <li>What do I want the audience to <strong>think</strong>?</li>
+                        <li>What do I want them to <strong>feel</strong>?</li>
+                        <li>What do I want them to <strong>do</strong>?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Three Main Purposes -->
+        <div class="slide" data-notes="Most speeches fall into one of three categories: To inform — you want to teach something. To inspire — you want to uplift or motivate. To persuade — you want to change a belief or behavior. Clarity here prevents confusion later. When you try to do all three at once, your speech becomes scattered.">
+            <div class="slide-content">
+                <h2>The 3 Main Speech Purposes</h2>
+                <div class="three-col">
+                    <div class="purpose-card">
+                        <div class="purpose-icon">📚</div>
+                        <h3>To Inform</h3>
+                        <p>Teach something new.<br>Share knowledge.<br>Explain concepts.</p>
+                    </div>
+                    <div class="purpose-card">
+                        <div class="purpose-icon">✨</div>
+                        <h3>To Inspire</h3>
+                        <p>Uplift your audience.<br>Motivate action.<br>Stir emotions.</p>
+                    </div>
+                    <div class="purpose-card">
+                        <div class="purpose-icon">🎯</div>
+                        <h3>To Persuade</h3>
+                        <p>Change beliefs.<br>Influence decisions.<br>Drive behavior.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: The Formula -->
+        <div class="slide" data-notes="Here's a simple formula you can use: 'At the end of my speech, my audience will…' If you cannot finish that sentence clearly, your speech lacks direction. For example: At the end of my speech, my audience will feel more confident speaking. That statement becomes your compass. Everything in your speech must support that outcome.">
+            <div class="slide-content">
+                <h2>The Purpose Statement Formula</h2>
+                <div class="formula-box">
+                    At the end of my speech, my audience will <span style="border-bottom: 3px solid var(--accent); padding: 0 10px;">________</span>.
+                </div>
+                <div style="margin-top: 1rem; color: var(--text-light); font-style: italic;">Examples:</div>
+                <div class="examples-grid">
+                    <div class="example-item">"Understand the value of public speaking"</div>
+                    <div class="example-item">"Feel confident about trying Table Topics"</div>
+                    <div class="example-item">"Commit to preparing their next speech"</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Without Purpose -->
+        <div class="slide" data-notes="When you don't establish a purpose: You ramble. You include too many ideas. Your conclusion feels weak. And the audience leaves unsure what the point was. Purpose prevents wandering.">
+            <div class="slide-content">
+                <h2>What Happens Without Purpose?</h2>
+                <div class="warning-grid">
+                    <div class="warning-item">
+                        <span class="warning-icon">🌪️</span>
+                        <span>Rambling</span>
+                    </div>
+                    <div class="warning-item">
+                        <span class="warning-icon">🗂️</span>
+                        <span>Too many ideas</span>
+                    </div>
+                    <div class="warning-item">
+                        <span class="warning-icon">🎭</span>
+                        <span>Weak conclusion</span>
+                    </div>
+                    <div class="warning-item">
+                        <span class="warning-icon">❓</span>
+                        <span>Audience confusion</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Final Thought -->
+        <div class="slide" data-notes="To close, I'll leave you with three questions: Why this topic? Why this audience? Why now? When your purpose is clear, your structure becomes easier. Your message becomes stronger. And your confidence increases. Before your next speech, define your purpose in one sentence. Thank you.">
+            <div class="slide-content">
+                <h2 style="margin-bottom: 1rem;">Final Thought</h2>
+                <div style="font-size: 1.5rem; color: var(--primary-light); margin-bottom: 3rem; font-weight: 600;">
+                    Clarity of purpose = Clarity of message
+                </div>
+                <div class="final-questions">
+                    <div class="final-q">
+                        <span class="finger">👉</span>
+                        <span>Why <strong>this</strong> topic?</span>
+                    </div>
+                    <div class="final-q">
+                        <span class="finger">👉</span>
+                        <span>Why <strong>this</strong> audience?</span>
+                    </div>
+                    <div class="final-q">
+                        <span class="finger">👉</span>
+                        <span>Why <strong>now</strong>?</span>
+                    </div>
+                </div>
+                <div style="margin-top: 3rem; font-size: 1.25rem; color: var(--text-light); font-style: italic;">
+                    Define your purpose in one sentence before your next speech.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-controls">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">←</button>
+        <div class="slide-counter"><span id="currentSlide">1</span> / <span id="totalSlides">6</span></div>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">→</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const notesText = document.getElementById('notesText');
+        const speakerNotes = document.getElementById('speakerNotes');
+        
+        // Timer variables
+        let timeRemaining = 300; // 5 minutes in seconds
+        let timerInterval;
+        let isTimerRunning = false;
+        
+        document.getElementById('totalSlides').textContent = totalSlides;
+        
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'prev');
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else if (index < currentSlide) {
+                    slide.classList.add('prev');
+                }
+            });
+            
+            document.getElementById('currentSlide').textContent = currentSlide + 1;
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+            
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            // Update speaker notes
+            notesText.textContent = slides[currentSlide].getAttribute('data-notes');
+            
+            // Start timer on first slide change
+            if (currentSlide === 1 && !isTimerRunning) {
+                startTimer();
+            }
+        }
+        
+        function changeSlide(direction) {
+            const newSlide = currentSlide + direction;
+            if (newSlide >= 0 && newSlide < totalSlides) {
+                currentSlide = newSlide;
+                updateSlide();
+            }
+        }
+        
+        function toggleNotes() {
+            speakerNotes.classList.toggle('visible');
+            const btn = document.querySelector('.notes-toggle');
+            btn.textContent = speakerNotes.classList.contains('visible') ? '📝 Hide Notes' : '📝 Show Notes';
+        }
+        
+        function startTimer() {
+            isTimerRunning = true;
+            timerInterval = setInterval(() => {
+                if (timeRemaining > 0) {
+                    timeRemaining--;
+                    updateTimerDisplay();
+                    
+                    // Warning at 1 minute remaining
+                    if (timeRemaining === 60) {
+                        document.getElementById('timer').classList.add('warning');
+                    }
+                } else {
+                    clearInterval(timerInterval);
+                }
+            }, 1000);
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timeDisplay').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                changeSlide(-1);
+            } else if (e.key === 'n') {
+                toggleNotes();
+            }
+        });
+        
+        // Initialize
+        updateSlide();
+    </script>
 </body>
 </html>
